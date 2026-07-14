@@ -9,11 +9,13 @@ services:
   db:
     image: postgres:13
     env_file: .env
+    restart: unless-stopped
     volumes:
       - pg_data:/var/lib/postgresql/data
   backend:
     build: ./backend/
     env_file: .env
+    restart: unless-stopped
     volumes:
       - static:/backend_static
 
@@ -21,12 +23,14 @@ services:
     env_file: .env
     build: ./frontend/
     command: cp -r /app/build/. /frontend_static/
+    restart: on-failure
     volumes:
       - static:/frontend_static
 
   gateway:
     build: ./gateway/
     env_file: .env
+    restart: unless-stopped
     volumes:
       - static:/staticfiles
     ports:
